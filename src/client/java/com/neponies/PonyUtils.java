@@ -51,7 +51,7 @@ public class PonyUtils {
             return resData.get(path);
         }
 
-        Identifier id = new Identifier("notenoughponies", path);
+        Identifier id = Identifier.of("notenoughponies", path);
         ResourceManager resourceManager = MinecraftClient.getInstance().getResourceManager();
 
         try {

@@ -1,4 +1,4 @@
-package com.neponies.client;
+package com.neponies;
 
 import com.neponies.NEPoniesConfig;
 import com.neponies.VillagerPonyEntityAccessor;

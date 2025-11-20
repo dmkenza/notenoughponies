@@ -1,11 +1,11 @@
 package com.neponies.mixin.client;
 
+import com.minelittlepony.client.model.armour.ArmourLayer;
+import com.minelittlepony.client.model.armour.ArmourRendererPlugin;
 import com.minelittlepony.client.render.entity.feature.ElytraFeature;
 import dev.emi.trinkets.api.TrinketsApi;
-import net.minecraft.client.render.VertexConsumerProvider;
-import net.minecraft.client.util.math.MatrixStack;
+import net.minecraft.entity.EquipmentSlot;
 import net.minecraft.entity.LivingEntity;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import org.spongepowered.asm.mixin.Mixin;
@@ -16,30 +16,37 @@ import org.spongepowered.asm.mixin.injection.Redirect;
 @Mixin(ElytraFeature.class)
 public abstract class ElytraFeatureMixin<T extends LivingEntity> {
 
-
-    /** *
+    /**
      *  Adds an additional Trinkets check so Elytra renders if equipped via Trinkets.
      */
-
     @Redirect(
-            method = "render",
+            method = "render(Lnet/minecraft/client/util/math/MatrixStack;Lnet/minecraft/client/render/VertexConsumerProvider;ILnet/minecraft/entity/LivingEntity;FFFFFF)V",
             at = @At(
                     value = "INVOKE",
-                    target = "Lnet/minecraft/item/ItemStack;getItem()Lnet/minecraft/item/Item;"
+                    target = "Lcom/minelittlepony/client/model/armour/ArmourRendererPlugin;getArmorStacks(Lnet/minecraft/entity/LivingEntity;Lnet/minecraft/entity/EquipmentSlot;Lcom/minelittlepony/client/model/armour/ArmourLayer;Lcom/minelittlepony/client/model/armour/ArmourRendererPlugin$ArmourType;)[Lnet/minecraft/item/ItemStack;"
             )
     )
-    private Item injectedElytraCheck(ItemStack stack, MatrixStack matrices, VertexConsumerProvider consumers,
-                                     int light, T entity, float limbDistance, float limbAngle,
-                                     float tickDelta, float age, float headYaw, float headPitch) {
-        if (stack.isOf(Items.ELYTRA)) {
-            return Items.ELYTRA;
-        }
+    private ItemStack[] redirectGetArmorStacks(ArmourRendererPlugin plugin, LivingEntity entity, EquipmentSlot slot, ArmourLayer layer, ArmourRendererPlugin.ArmourType type) {
+        ItemStack[] stacks = plugin.getArmorStacks(entity, slot, layer, type);
 
-        if (entityHasElytraFromTrinkets(entity)) {
-            return Items.ELYTRA;
-        }
+        if (type == ArmourRendererPlugin.ArmourType.ELYTRA && slot == EquipmentSlot.CHEST && layer == ArmourLayer.OUTER) {
+            boolean hasElytra = false;
+            for (ItemStack stack : stacks) {
+                if (stack.isOf(Items.ELYTRA)) {
+                    hasElytra = true;
+                    break;
+                }
+            }
 
-        return stack.getItem();
+            if (!hasElytra && entityHasElytraFromTrinkets(entity)) {
+                // Append fake elytra stack to trigger rendering
+                ItemStack[] newStacks = new ItemStack[stacks.length + 1];
+                System.arraycopy(stacks, 0, newStacks, 0, stacks.length);
+                newStacks[stacks.length] = new ItemStack(Items.ELYTRA);
+                return newStacks;
+            }
+        }
+        return stacks;
     }
 
     @Unique

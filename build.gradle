@@ -72,10 +72,11 @@ dependencies {
 	// Unicopia
 	modCompileOnly("maven.modrinth:unicopia:${project.unicopia_version}")
 
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-base:5.2.0"
-	modImplementation "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.0"
-	include "dev.onyxstudios.cardinal-components-api:cardinal-components-entity:5.2.0"
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.2"
+	include "org.ladysnake.cardinal-components-api:cardinal-components-base:6.1.2"
+
+	modImplementation "org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.2"
+	include "org.ladysnake.cardinal-components-api:cardinal-components-entity:6.1.2"
 }
 
 

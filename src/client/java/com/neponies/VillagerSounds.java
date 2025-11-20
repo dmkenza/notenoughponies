@@ -32,7 +32,7 @@ public class VillagerSounds {
      */
     public static void registerVillagerSounds() {
         for (String eventName : REPLACED_VILLAGER_SOUND_EVENTS) {
-            Identifier id = new Identifier(MOD_ID, "entity.villager." + eventName + ".nep");
+            Identifier id = Identifier.of(MOD_ID, "entity.villager." + eventName + ".nep");
             Registry.register(Registries.SOUND_EVENT, id, SoundEvent.of(id));
             VILLAGERS_SOUNDS.add(id);
         }
@@ -56,7 +56,7 @@ public class VillagerSounds {
 
         String suffix = path.substring("entity.villager.".length());
         if (REPLACED_VILLAGER_SOUND_EVENTS.contains(suffix)) {
-            Identifier nepId = new Identifier(MOD_ID, "entity.villager." + suffix + ".nep");
+            Identifier nepId = Identifier.of(MOD_ID, "entity.villager." + suffix + ".nep");
             return Registries.SOUND_EVENT.getOrEmpty(nepId)
                     .orElse(Registries.SOUND_EVENT.get(originalId));
         }

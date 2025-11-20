@@ -3,7 +3,7 @@ package com.neponies.mixin;
 import com.minelittlepony.api.pony.meta.Race;
 import com.neponies.*;
 import com.neponies.util.PonyConfigBridge;
-import dev.onyxstudios.cca.api.v3.component.ComponentKey;
+import org.ladysnake.cca.api.v3.component.ComponentKey;
 import net.minecraft.entity.EntityData;
 import net.minecraft.entity.EntityType;
 import net.minecraft.entity.SpawnReason;
@@ -16,6 +16,7 @@ import net.minecraft.text.Text;
 import net.minecraft.village.VillagerData;
 import net.minecraft.world.LocalDifficulty;
 import net.minecraft.world.World;
+import net.minecraft.world.ServerWorldAccess;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -74,7 +75,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Vill
         String fullName = getFirstName() + " " + getSecondName();
         fullName = fullName.trim();
 
-        ponyCustomName = Text.of(fullName);
+        ponyCustomName = Text.literal(fullName);
         return ponyCustomName;
     }
 
@@ -89,7 +90,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Vill
         }
 
         profession = upperFirstLetter(profession);
-        return Text.of(profession);
+        return Text.literal(profession);
     }
 
     @Unique
@@ -216,9 +217,8 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Vill
         parentVillager2 = (VillagerEntity) passiveEntity;
     }
 
-
     @Inject(method = "initialize", at = @At("TAIL"))
-    public void onInitialize(net.minecraft.world.ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, NbtCompound entityNbt, CallbackInfoReturnable<EntityData> cir) {
+    public void onInitialize(ServerWorldAccess world, LocalDifficulty difficulty, SpawnReason spawnReason, EntityData entityData, CallbackInfoReturnable<EntityData> cir) {
         checkAndSetRace();
 
         if (onInitializeListener != null) {
@@ -226,6 +226,7 @@ public abstract class VillagerEntityMixin extends MerchantEntity implements Vill
             onInitializeListener = null;
         }
     }
+
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void onTick(CallbackInfo ci) {

@@ -21,7 +21,7 @@ public class NotEnoughPoniesClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {
 
-        com.neponies.client.ClientPonyConfigImpl.init();
+        com.neponies.ClientPonyConfigImpl.init();
 
         // Register villager sounds
         VillagerSounds.registerVillagerSounds();
