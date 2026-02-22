@@ -4,6 +4,7 @@
 	"compatibilityLevel": "JAVA_17",
 	"client": [
 		"AbstractPonyRendererMixin",
+		"ClientWorldSoundMixin",
 		"EntityPlaySoundMixin",
 		"EquineRenderManagerMixin",
 		"MobEntityRendererMixin",
